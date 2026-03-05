@@ -84,17 +84,17 @@ export const siteConfig = {
     {
       title: "Primera entrevista",
       description:
-        "Un espacio de encuentro donde nos conocemos y evaluamos juntos si este es el lugar adecuado para tu proceso.",
+        "Comenzamos con una conversación inicial para conocernos, explorar qué te trae a consultar y evaluar juntos si este espacio es el adecuado para ti.",
     },
     {
-      title: "Proceso terapéutico",
+      title: "Sesiones personalizadas",
       description:
-        "Sesiones regulares adaptadas a tus necesidades, con objetivos claros y revisión periódica del proceso.",
+        "Cada proceso terapéutico es único. Las sesiones se adaptan a tus necesidades, tu ritmo y tu momento vital, sin esquemas rígidos ni tiempos predeterminados.",
     },
     {
-      title: "Modalidad flexible",
+      title: "Modalidad de sesiones",
       description:
-        "Atención online y presencial, con horarios que se adaptan a tu disponibilidad.",
+        "Ofrezco atención presencial y online, para que puedas elegir la modalidad que mejor se ajuste a tu vida y comodidad.",
     },
   ],
 
@@ -153,6 +153,8 @@ export const siteConfig = {
     formation: "Formación continua y actualización",
     approach: "Enfoque ético y respetuoso",
     experience: "Experiencia en acompañamiento terapéutico",
+    parallaxImage: "/img-parallax-intermedia.jpg", // Imagen de fondo para efecto parallax (opcional, dejar vacío "" para sin imagen)
+    parallaxOverlay: 0.6, // Opacidad del overlay oscuro sobre la imagen parallax (0-1)
   },
 
   // Contacto
@@ -193,21 +195,18 @@ export const siteConfig = {
   ],
 
   // Enlaces sociales (opcional)
-  socialLinks: [
-    // {
-    //   name: "LinkedIn",
-    //   url: "https://linkedin.com/in/tu-perfil",
-    // },
-    // {
-    //   name: "Instagram",
-    //   url: "https://instagram.com/tu-perfil",
-    // },
-  ],
+  socialLinks: [] as SocialLink[],
 
   // Disclaimer ético
   disclaimer: {
     text: "La información proporcionada en este sitio tiene carácter informativo y no sustituye el asesoramiento profesional. La terapia psicológica es un proceso personal que requiere compromiso y tiempo.",
     licenseInfo: "Ejercicio profesional habilitado según normativa vigente.",
+  },
+
+  // Calendly — reemplazar TU_USUARIO con el slug real de tu cuenta
+  calendly: {
+    firstSessionUrl: "https://calendly.com/TU_USUARIO/primera-entrevista",
+    regularSessionUrl: "https://calendly.com/TU_USUARIO/sesion",
   },
 
   // SEO por página

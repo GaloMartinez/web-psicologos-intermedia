@@ -1,82 +1,20 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Button } from "../ui/Button";
-import { siteConfig } from "../../config/siteConfig";
+import { useContactForm } from "@/hooks/useContactForm";
+import { Button } from "@/components/ui/Button";
+import { siteConfig } from "@/config/siteConfig";
 
 export const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    contactMethod: "whatsapp",
-    reason: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const {
+    formData,
+    errors,
+    isSubmitting,
+    isSuccess,
+    handleSubmit,
+    handleChange,
+  } = useContactForm();
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "El nombre es requerido";
-    }
-
-    if (!formData.reason) {
-      newErrors.reason = "Por favor selecciona un motivo";
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "El mensaje es requerido";
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = "El mensaje debe tener al menos 10 caracteres";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validate()) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    // Simulación de envío (en producción, aquí iría la integración real)
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setIsSubmitting(false);
-    setIsSuccess(true);
-
-    // Reset form
-    setFormData({
-      name: "",
-      contactMethod: "whatsapp",
-      reason: "",
-      message: "",
-    });
-
-    // Scroll to success message
-    setTimeout(() => {
-      const successElement = document.getElementById("success-message");
-      successElement?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
+  const inputBase =
+    "font-sans w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-colors";
 
   if (isSuccess) {
     return (
@@ -104,7 +42,9 @@ export const ContactForm = () => {
         <h3 className="font-serif text-2xl font-medium text-primary mb-2 leading-snug">
           Mensaje enviado correctamente
         </h3>
-        <p className="font-sans text-neutral-600 leading-relaxed">{siteConfig.contact.successMessage}</p>
+        <p className="font-sans text-neutral-600 leading-relaxed">
+          {siteConfig.contact.successMessage}
+        </p>
       </motion.div>
     );
   }
@@ -117,7 +57,6 @@ export const ContactForm = () => {
       onSubmit={handleSubmit}
       className="space-y-6"
     >
-      {/* Nombre */}
       <div>
         <label
           htmlFor="name"
@@ -131,48 +70,35 @@ export const ContactForm = () => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className={`font-sans w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-colors ${
-            errors.name ? "border-red-500" : "border-neutral-200"
-          }`}
           placeholder="Tu nombre completo"
+          className={`${inputBase} ${errors.name ? "border-red-500" : "border-neutral-200"}`}
         />
         {errors.name && (
           <p className="font-sans mt-1 text-sm text-red-600">{errors.name}</p>
         )}
       </div>
 
-      {/* Método de contacto preferido */}
       <div>
         <label className="font-sans block text-sm font-medium text-neutral-900 mb-2">
           Prefiero que me contacten por <span className="text-red-500">*</span>
         </label>
         <div className="space-y-2">
-          <label className="font-sans flex items-center">
-            <input
-              type="radio"
-              name="contactMethod"
-              value="whatsapp"
-              checked={formData.contactMethod === "whatsapp"}
-              onChange={handleChange}
-              className="mr-2 accent-accent"
-            />
-            <span className="text-neutral-700">WhatsApp</span>
-          </label>
-          <label className="font-sans flex items-center">
-            <input
-              type="radio"
-              name="contactMethod"
-              value="email"
-              checked={formData.contactMethod === "email"}
-              onChange={handleChange}
-              className="mr-2 accent-accent"
-            />
-            <span className="text-neutral-700">Email</span>
-          </label>
+          {(["whatsapp", "email"] as const).map((method) => (
+            <label key={method} className="font-sans flex items-center">
+              <input
+                type="radio"
+                name="contactMethod"
+                value={method}
+                checked={formData.contactMethod === method}
+                onChange={handleChange}
+                className="mr-2 accent-accent"
+              />
+              <span className="text-neutral-700 capitalize">{method === "whatsapp" ? "WhatsApp" : "Email"}</span>
+            </label>
+          ))}
         </div>
       </div>
 
-      {/* Motivo */}
       <div>
         <label
           htmlFor="reason"
@@ -185,9 +111,7 @@ export const ContactForm = () => {
           name="reason"
           value={formData.reason}
           onChange={handleChange}
-          className={`font-sans w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-colors ${
-            errors.reason ? "border-red-500" : "border-neutral-200"
-          }`}
+          className={`${inputBase} ${errors.reason ? "border-red-500" : "border-neutral-200"}`}
         >
           <option value="">Selecciona un motivo</option>
           {siteConfig.contact.formReasons.map((reason) => (
@@ -201,7 +125,6 @@ export const ContactForm = () => {
         )}
       </div>
 
-      {/* Mensaje */}
       <div>
         <label
           htmlFor="message"
@@ -215,22 +138,15 @@ export const ContactForm = () => {
           value={formData.message}
           onChange={handleChange}
           rows={6}
-          className={`font-sans w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition-colors resize-none ${
-            errors.message ? "border-red-500" : "border-neutral-200"
-          }`}
           placeholder="Cuéntame brevemente qué te trae a consultar..."
+          className={`${inputBase} resize-none ${errors.message ? "border-red-500" : "border-neutral-200"}`}
         />
         {errors.message && (
           <p className="font-sans mt-1 text-sm text-red-600">{errors.message}</p>
         )}
       </div>
 
-      {/* Submit Button */}
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={isSubmitting}
-      >
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? "Enviando..." : "Enviar mensaje"}
       </Button>
     </motion.form>

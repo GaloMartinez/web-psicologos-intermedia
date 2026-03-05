@@ -1,25 +1,25 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { siteConfig } from "../../config/siteConfig";
+import { NAV_LINKS } from "@/config/navLinks";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { Button } from "@/components/ui/Button";
+import { siteConfig } from "@/config/siteConfig";
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const navLinks = [
-  { path: "/", label: "Inicio" },
-  { path: "/sobre-mi", label: "Sobre mí" },
-  { path: "/servicios", label: "Servicios" },
-  { path: "/contacto", label: "Contacto" },
-];
-
 export const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
+  const whatsAppUrl = buildWhatsAppUrl(
+    siteConfig.professional.whatsapp.number,
+    siteConfig.professional.whatsapp.message
+  );
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -28,7 +28,6 @@ export const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           />
 
-          {/* Menu */}
           <motion.div
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
@@ -63,7 +62,7 @@ export const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               </div>
 
               <nav className="space-y-4">
-                {navLinks.map((link) => (
+                {NAV_LINKS.map((link) => (
                   <Link
                     key={link.path}
                     to={link.path}
@@ -75,14 +74,15 @@ export const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                 ))}
               </nav>
 
-              <div className="mt-8 pt-8 border-t border-neutral-200">
+              <div className="mt-8 pt-8 border-t border-neutral-200 space-y-3">
+                <Button href="/agenda" className="w-full justify-center" onClick={onClose}>
+                  Agendar sesión
+                </Button>
                 <a
-                  href={`https://wa.me/${siteConfig.professional.whatsapp.number}?text=${encodeURIComponent(
-                    siteConfig.professional.whatsapp.message
-                  )}`}
+                  href={whatsAppUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full text-center py-2 px-4 bg-accent text-white rounded-lg hover:bg-[color:var(--color-accent-90)] transition-colors"
+                  className="block w-full text-center py-2 px-4 border border-neutral-200 text-neutral-700 rounded-md font-sans text-sm font-medium hover:bg-neutral-50 transition-colors"
                 >
                   WhatsApp
                 </a>

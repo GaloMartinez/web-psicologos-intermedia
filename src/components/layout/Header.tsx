@@ -1,47 +1,45 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Navbar } from "./Navbar";
-import { MobileMenu } from "./MobileMenu";
-import { Button } from "../ui/Button";
-import { Container } from "../ui/Container";
-import { siteConfig } from "../../config/siteConfig";
+import { useMobileMenu } from "@/hooks/useMobileMenu";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { Navbar } from "@/components/layout/Navbar";
+import { MobileMenu } from "@/components/layout/MobileMenu";
+import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
+import { siteConfig } from "@/config/siteConfig";
 
 export const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isOpen, open, close } = useMobileMenu();
 
   return (
     <>
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-30">
         <Container>
           <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo / Nombre */}
             <Link
               to="/"
-              className="font-sans text-xl md:text-2xl font-semibold text-primary hover:text-primary/80 transition-colors"
+              className="font-sans text-xl md:text-2xl font-semibold tracking-tight text-primary hover:text-primary/75 transition-colors duration-150"
             >
               {siteConfig.professional.name}
             </Link>
 
-            {/* Desktop Nav */}
             <Navbar />
 
-            {/* Desktop CTA */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-3">
               <Button
-                href={`https://wa.me/${siteConfig.professional.whatsapp.number}?text=${encodeURIComponent(
+                href={buildWhatsAppUrl(
+                  siteConfig.professional.whatsapp.number,
                   siteConfig.professional.whatsapp.message
-                )}`}
+                )}
                 variant="outline"
                 external
               >
                 WhatsApp
               </Button>
-              <Button href="/contacto">Contacto</Button>
+              <Button href="/agenda">Agendar sesión</Button>
             </div>
 
-            {/* Mobile Menu Button */}
             <button
-              onClick={() => setMobileMenuOpen(true)}
+              onClick={open}
               className="lg:hidden text-neutral-600 hover:text-primary transition-colors"
               aria-label="Abrir menú"
             >
@@ -63,10 +61,7 @@ export const Header = () => {
         </Container>
       </header>
 
-      <MobileMenu
-        isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-      />
+      <MobileMenu isOpen={isOpen} onClose={close} />
     </>
   );
 };
