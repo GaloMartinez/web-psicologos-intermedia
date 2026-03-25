@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
+import { motion } from "framer-motion";
+import { fadeInUpView, fadeInUpViewDelayed } from "@/lib/animations";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
-import { SectionTitle } from "@/components/ui/SectionTitle";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { siteConfig } from "@/config/siteConfig";
 
@@ -36,102 +36,116 @@ export const Contact = () => {
       </Helmet>
 
       <PageHero
-        title="Contacto"
-        subtitle="Estoy aquí para responder tus consultas y acompañarte en tu proceso"
+        label="Contacto"
+        title="Escribime"
+        subtitle="Si tenés dudas, ganas de empezar o simplemente querés saber más sobre cómo trabajo, estoy disponible. Respondo en un plazo de 24 a 48 horas hábiles."
       />
 
-      {/* Formulario */}
+      {/* Layout principal: formulario + datos */}
       <Section bg="white" spacing="md" id="contact-form">
         <Container>
-          <div className="max-w-2xl mx-auto">
-            <SectionTitle
-              title="Envíame un mensaje"
-              subtitle="Completa el formulario y te responderé a la brevedad"
-            />
-            <ContactForm />
-          </div>
-        </Container>
-      </Section>
+          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-14 lg:gap-20 items-start">
 
-      {/* Información de contacto */}
-      <Section bg="muted" spacing="md">
-        <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
-            <Card>
-              <h3 className="font-serif text-xl font-medium text-primary mb-4 leading-snug">
-                Información de contacto
-              </h3>
-              <div className="space-y-3 text-neutral-600">
+            {/* Formulario */}
+            <div>
+              <motion.div {...fadeInUpView} className="mb-8">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="w-8 h-px bg-accent" />
+                  <span className="font-sans text-xs text-accent uppercase tracking-[0.18em] font-medium">
+                    Formulario
+                  </span>
+                </div>
+                <h2 className="font-serif text-primary" style={{ fontSize: "1.8rem" }}>
+                  Enviame un mensaje
+                </h2>
+              </motion.div>
+              <ContactForm />
+            </div>
+
+            {/* Info lateral — sencilla, sin cards */}
+            <motion.div {...fadeInUpViewDelayed(0.15)} className="pt-2">
+              <div className="space-y-8">
+                {/* Email */}
                 <div>
-                  <p className="font-sans font-medium text-neutral-900">Email</p>
+                  <p className="font-sans text-[10px] uppercase tracking-widest text-neutral-600 mb-2">
+                    Email
+                  </p>
                   <a
                     href={`mailto:${siteConfig.professional.email}`}
-                    className="font-sans text-primary hover:text-primary/80 transition-colors"
+                    className="font-serif text-primary hover:text-secondary transition-colors text-base"
                   >
                     {siteConfig.professional.email}
                   </a>
                 </div>
+
+                {/* WhatsApp */}
                 <div>
-                  <p className="font-sans font-medium text-neutral-900">WhatsApp</p>
-                  <a
-                    href={whatsAppUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-sans text-primary hover:text-primary/80 transition-colors"
-                  >
-                    Enviar mensaje
-                  </a>
+                  <p className="font-sans text-[10px] uppercase tracking-widest text-neutral-600 mb-2">
+                    WhatsApp
+                  </p>
+                  <Button href={whatsAppUrl} external className="w-full justify-center text-sm">
+                    Abrir WhatsApp
+                  </Button>
                 </div>
+
+                {/* Modalidad */}
                 <div>
-                  <p className="font-sans font-medium text-neutral-900">Modalidad</p>
-                  <p className="font-sans text-neutral-600">{siteConfig.professional.modality}</p>
+                  <p className="font-sans text-[10px] uppercase tracking-widest text-neutral-600 mb-2">
+                    Modalidad
+                  </p>
+                  <p className="font-sans text-neutral-600 text-sm leading-relaxed">
+                    {siteConfig.professional.modality}
+                  </p>
                 </div>
+
+                {/* Ubicación */}
                 <div>
-                  <p className="font-sans font-medium text-neutral-900">Ubicación</p>
-                  <p className="font-sans text-neutral-600">{siteConfig.professional.city}</p>
+                  <p className="font-sans text-[10px] uppercase tracking-widest text-neutral-600 mb-2">
+                    Ubicación
+                  </p>
+                  <p className="font-sans text-neutral-600 text-sm leading-relaxed">
+                    {siteConfig.professional.city}
+                  </p>
+                </div>
+
+                {/* Tiempos de respuesta */}
+                <div className="pt-4 border-t border-neutral-200">
+                  <p className="font-sans text-xs text-neutral-600 leading-relaxed">
+                    Respondo dentro de las{" "}
+                    <span className="font-medium text-primary">48 horas hábiles</span>.
+                    Si es urgente, el WhatsApp es la vía más rápida.
+                  </p>
                 </div>
               </div>
-            </Card>
-
-            <Card>
-              <h3 className="font-serif text-xl font-medium text-primary mb-4 leading-snug">
-                Consulta directa por WhatsApp
-              </h3>
-              <p className="font-sans text-neutral-600 mb-6 leading-relaxed">
-                Si prefieres, puedes contactarme directamente por WhatsApp. Te
-                responderé en un plazo de 24 horas hábiles.
-              </p>
-              <Button href={whatsAppUrl} external className="w-full">
-                Abrir WhatsApp
-              </Button>
-            </Card>
+            </motion.div>
           </div>
         </Container>
       </Section>
 
+      {/* Mapa (opcional) */}
       {siteConfig.contact.location.enabled && (
-        <Section bg="white" spacing="md">
+        <Section bg="muted" spacing="sm">
           <Container>
             <div className="max-w-4xl mx-auto">
-              <SectionTitle
-                title="Ubicación"
-                subtitle={siteConfig.contact.location.address}
-              />
+              <p className="font-sans text-xs text-neutral-600 uppercase tracking-widest mb-4">
+                Ubicación
+              </p>
+              <p className="font-serif text-primary mb-6">
+                {siteConfig.contact.location.address}
+              </p>
               {siteConfig.contact.location.mapUrl && (
-                <Card>
-                  <div className="aspect-video">
-                    <iframe
-                      src={siteConfig.contact.location.mapUrl}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title="Ubicación"
-                    />
-                  </div>
-                </Card>
+                <div className="aspect-video rounded-xl overflow-hidden border border-neutral-200">
+                  <iframe
+                    src={siteConfig.contact.location.mapUrl}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Ubicación"
+                  />
+                </div>
               )}
             </div>
           </Container>

@@ -6,21 +6,23 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { siteConfig } from "@/config/siteConfig";
 
-/** 3 trust pillars — each with a primary statement and supporting detail */
-const TRUST_ITEMS = [
+const STATS = [
   {
-    badgeKey: "license" as const,
-    getDetail: () => siteConfig.professional.license,
+    value: "9",
+    unit: "años",
+    label: "de práctica clínica continua",
     delay: 0,
   },
   {
-    badgeKey: "formation" as const,
-    getDetail: () => "Actualización permanente en enfoques y técnicas terapéuticas",
+    value: "MN",
+    unit: "68.432",
+    label: "Matrícula habilitante — CABA",
     delay: 0.1,
   },
   {
-    badgeKey: "approach" as const,
-    getDetail: () => "Respeto por tu proceso y tus tiempos",
+    value: "3",
+    unit: "enfoques",
+    label: "TCC · ACT · Psicodinámico",
     delay: 0.2,
   },
 ];
@@ -31,26 +33,36 @@ export const TrustSection = () => {
     target: parallaxRef,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], ["-25%", "25%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-22%", "22%"]);
 
   const hasImage = Boolean(siteConfig.trust.parallaxImage);
 
-  const headingClass = hasImage ? "text-white"      : "text-primary";
-  const subClass     = hasImage ? "text-white/70"   : "text-neutral-500";
-  const lineClass    = hasImage ? "bg-white/25"     : "bg-accent/35";
-  const labelClass   = hasImage ? "text-white/90"   : "text-neutral-700";
-  const detailClass  = hasImage ? "text-white/55"   : "text-neutral-500";
+  const headingClass = hasImage ? "text-white" : "text-primary";
+  const subClass = hasImage ? "text-white/80" : "text-neutral-600";
+  const valueClass = hasImage ? "text-white" : "text-primary";
+  // Cuando hay imagen oscura, text-accent (#BE7955 terracota) tiene bajo contraste.
+  // Usamos un ámbar cálido claro que lee bien sobre overlays oscuros.
+  const unitClass = hasImage ? "text-[#EEC27A]" : "text-accent";
+  const labelClass = hasImage ? "text-white/75" : "text-neutral-600";
+  const divClass = hasImage ? "bg-white/15" : "bg-neutral-200";
 
   return (
     <Section
       ref={parallaxRef}
       bg="transparent"
-      spacing="sm"
-      className="relative overflow-hidden"
+      spacing="lg"
+      // bg-primary garantiza fondo oscuro siempre (fallback si la imagen no carga).
+      // Los z-index son positivos para evitar que los stacking contexts de Framer Motion
+      // (creados por transform) queden detrás del painted layer de la sección.
+      className={cn("relative overflow-hidden", hasImage && "bg-primary")}
     >
       {hasImage && (
         <>
-          <motion.div style={{ y }} className="absolute inset-0 -z-10">
+          {/* Imagen parallax — z-0, visible sobre bg-primary */}
+          <motion.div
+            style={{ y }}
+            className="absolute inset-0 z-0 pointer-events-none"
+          >
             <div
               className="absolute inset-0 w-full h-[150%] bg-cover bg-center bg-no-repeat"
               style={{
@@ -59,47 +71,85 @@ export const TrustSection = () => {
               }}
             />
           </motion.div>
+          {/* Overlay oscuro — z-0, después de la imagen en el DOM = encima de ella */}
           <div
-            className="absolute inset-0 -z-10 bg-neutral-900"
-            style={{ opacity: siteConfig.trust.parallaxOverlay ?? 0.55 }}
+            className="absolute inset-0 z-0 bg-primary pointer-events-none"
+            style={{ opacity: siteConfig.trust.parallaxOverlay ?? 0.58 }}
           />
         </>
       )}
 
       <Container className="relative z-10">
-        {/* Heading — compact */}
-        <motion.div {...fadeInUpView} className="text-center mb-10">
-          <h2 className={cn("font-serif text-2xl md:text-3xl font-semibold leading-tight", headingClass)}>
-            Confianza profesional
+        {/* Título section */}
+        <motion.div {...fadeInUpView} className="text-center mb-14">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <span className={cn("w-8 h-px", divClass)} />
+            <span
+              className={cn(
+                "font-sans text-xs uppercase tracking-[0.18em] font-medium",
+                hasImage ? "text-white/60" : "text-neutral-600"
+              )}
+            >
+              Credenciales
+            </span>
+            <span className={cn("w-8 h-px", divClass)} />
+          </div>
+          <h2 className={cn("font-serif", headingClass)}>
+            Formación y experiencia
           </h2>
-          <p className={cn("font-sans text-sm mt-2 leading-relaxed", subClass)}>
-            Compromiso con la ética y la formación continua
+          <p className={cn("font-sans text-base mt-3 max-w-md mx-auto leading-relaxed", subClass)}>
+            Una práctica construida sobre años de estudio, supervisión y
+            compromiso con cada proceso.
           </p>
         </motion.div>
 
-        {/* 3-column trust band */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-8 gap-x-6 md:gap-x-12 max-w-4xl mx-auto">
-          {TRUST_ITEMS.map(({ badgeKey, getDetail, delay }) => (
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 md:gap-16 max-w-3xl mx-auto">
+          {STATS.map(({ value, unit, label, delay }) => (
             <motion.div
-              key={badgeKey}
+              key={label}
               {...fadeInUpViewDelayed(delay)}
-              className="flex flex-col items-center text-center"
+              className="text-center"
             >
-              {/* Thin accent bar — visual anchor */}
-              <div className={cn("w-8 h-px mb-4", lineClass)} />
-
-              {/* Primary statement — what you can trust */}
-              <p className={cn("font-serif text-base md:text-lg font-medium leading-snug mb-1.5", labelClass)}>
-                {siteConfig.trust[badgeKey]}
-              </p>
-
-              {/* Supporting detail — the specific credential or context */}
-              <p className={cn("font-sans text-xs leading-relaxed", detailClass)}>
-                {getDetail()}
+              <div className="mb-3">
+                <span
+                  className={cn("font-serif font-light", valueClass)}
+                  style={{ fontSize: "3.5rem", lineHeight: 1 }}
+                >
+                  {value}
+                </span>
+                <span
+                  className={cn("font-serif ml-1.5 font-medium", unitClass)}
+                  style={{ fontSize: "1.15rem" }}
+                >
+                  {unit}
+                </span>
+              </div>
+              <p className={cn("font-sans text-sm leading-snug", labelClass)}>
+                {label}
               </p>
             </motion.div>
           ))}
         </div>
+
+        {/* Cita o nota ética */}
+        <motion.div
+          {...fadeInUpViewDelayed(0.4)}
+          className={cn(
+            "mt-16 mx-auto max-w-xl text-center border-t pt-10",
+            hasImage ? "border-white/15" : "border-neutral-200"
+          )}
+        >
+          <p
+            className={cn(
+              "font-serif italic leading-relaxed",
+              hasImage ? "text-white/80" : "text-neutral-600",
+              "text-lg"
+            )}
+          >
+            "La ética no es un requisito burocrático. Es la base sobre la que se construye cualquier proceso terapéutico serio."
+          </p>
+        </motion.div>
       </Container>
     </Section>
   );

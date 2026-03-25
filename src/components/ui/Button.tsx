@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 interface ButtonProps {
   children: ReactNode;
-  variant?: "primary" | "secondary" | "outline";
+  variant?: "primary" | "secondary" | "outline" | "ghost";
   href?: string;
   onClick?: () => void;
   className?: string;
@@ -23,7 +23,10 @@ const VARIANTS = {
   secondary:
     "bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus:ring-neutral-600",
   outline:
-    "border-2 border-primary text-primary hover:bg-neutral-50 focus:ring-primary",
+    "border border-primary/85 text-primary hover:bg-primary/[0.04] hover:border-primary focus:ring-primary",
+  // Para usar sobre fondos oscuros (bg-primary)
+  ghost:
+    "border border-white/40 text-white/85 hover:border-white hover:text-white hover:bg-white/8 focus:ring-white",
 } as const;
 
 const SPRING = { type: "spring", stiffness: 360, damping: 24 } as const;

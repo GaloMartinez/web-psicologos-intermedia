@@ -3,16 +3,13 @@ import { motion } from "framer-motion";
 import {
   fadeInFromLeft,
   fadeInFromRight,
+  fadeInUpView,
   fadeInUpViewDelayed,
-  scaleInView,
 } from "@/lib/animations";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
-import { SectionTitle } from "@/components/ui/SectionTitle";
 import { CTASection } from "@/sections/shared";
 import { siteConfig } from "@/config/siteConfig";
 
@@ -31,74 +28,113 @@ export const About = () => {
         <meta property="og:description" content={siteConfig.seo.about.description} />
       </Helmet>
 
-      {/* 1 — Presentación: quién soy */}
-      <PageHero title="Sobre mí" subtitle={siteConfig.about.bio} />
+      {/* 1 — Hero: quién soy */}
+      <PageHero
+        label="Sobre mí"
+        title="Nicolás Ferreyra"
+        subtitle={siteConfig.about.bio}
+      />
 
-      {/* 2 — Trayectoria: experiencia y contexto profesional */}
+      {/* 2 — Foto + trayectoria */}
       <Section bg="white" spacing="md">
         <Container>
           <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+              {/* Foto */}
               {siteConfig.about.image && (
                 <motion.div {...fadeInFromLeft} className="order-2 lg:order-1">
-                  <div className="relative aspect-square max-w-md mx-auto lg:max-w-none">
+                  <div className="relative">
+                    <div className="absolute -bottom-4 -left-4 w-full h-full rounded-2xl border border-secondary/25" />
                     <img
                       src={siteConfig.about.image}
                       alt={siteConfig.about.imageAlt || "Foto profesional"}
-                      className="w-full h-full object-cover rounded-2xl shadow-lg"
+                      className="relative w-full aspect-[3/4] max-w-md object-cover rounded-2xl shadow-lg"
                       loading="lazy"
                     />
                   </div>
+
+                  {/* Badge matrícula */}
+                  <div className="mt-6 flex items-start gap-4">
+                    <div className="w-px h-12 bg-accent/30 mt-1 shrink-0" />
+                    <div>
+                      <p className="font-sans text-xs text-neutral-600 uppercase tracking-widest mb-1">
+                        Habilitado en CABA
+                      </p>
+                      <p className="font-serif text-primary font-medium">
+                        Matrícula Nacional {siteConfig.professional.license}
+                      </p>
+                    </div>
+                  </div>
                 </motion.div>
               )}
-              <motion.div {...fadeInFromRight()} className="order-1 lg:order-2">
-                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-primary mb-5 leading-tight">
-                  Mi trayectoria
+
+              {/* Texto de trayectoria */}
+              <motion.div
+                {...fadeInFromRight()}
+                className="order-1 lg:order-2 pt-2"
+              >
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="w-8 h-px bg-accent" />
+                  <span className="font-sans text-xs text-accent uppercase tracking-[0.18em] font-medium">
+                    Trayectoria
+                  </span>
+                </div>
+                <h2 className="font-serif text-primary mb-5">
+                  Mi recorrido
                 </h2>
-                <div className="w-10 h-px bg-accent/50 mb-5" />
-                <p className="font-sans text-neutral-600 leading-relaxed text-lg">
-                  {siteConfig.about.extendedBio}
-                </p>
+                <div className="space-y-5">
+                  {siteConfig.about.extendedBio
+                    .split("\n\n")
+                    .filter(Boolean)
+                    .map((paragraph, i) => (
+                      <p
+                        key={i}
+                        className="font-sans text-neutral-600 leading-relaxed"
+                      >
+                        {paragraph.trim()}
+                      </p>
+                    ))}
+                </div>
               </motion.div>
             </div>
           </div>
         </Container>
       </Section>
 
-      {/* 3 — Formación: credenciales académicas */}
+      {/* 3 — Formación académica */}
       <Section bg="muted" spacing="md">
         <Container>
-          <div className="max-w-5xl mx-auto">
-            <SectionTitle
-              align="left"
-              title="Formación profesional"
-              subtitle="Formación académica y desarrollo continuo"
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="max-w-4xl mx-auto">
+            <motion.div {...fadeInUpView} className="mb-12">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-8 h-px bg-accent" />
+                <span className="font-sans text-xs text-accent uppercase tracking-[0.18em] font-medium">
+                  Formación
+                </span>
+              </div>
+              <h2 className="font-serif text-primary">
+                Credenciales académicas
+              </h2>
+            </motion.div>
+
+            {/* Lista de formación — editorial, no cards */}
+            <div>
               {siteConfig.about.formation.map((item, index) => (
-                <motion.div key={index} {...fadeInUpViewDelayed(index * 0.1)}>
-                  <Card className="h-full">
-                    <div className="flex items-start gap-4">
-                      <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <svg
-                          className="w-5 h-5 text-primary"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                          />
-                        </svg>
-                      </div>
-                      <p className="font-sans text-neutral-600 leading-relaxed flex-1">
-                        {item}
-                      </p>
-                    </div>
-                  </Card>
+                <motion.div
+                  key={index}
+                  {...fadeInUpViewDelayed(index * 0.1)}
+                  className="border-t border-neutral-200 py-6 first:border-t-0 first:pt-0 grid grid-cols-[32px_1fr] gap-5 items-start"
+                >
+                  <span
+                    className="font-serif text-accent/70 font-light leading-none mt-0.5"
+                    style={{ fontSize: "1.05rem" }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <p className="font-sans text-neutral-600 leading-relaxed">
+                    {item}
+                  </p>
                 </motion.div>
               ))}
             </div>
@@ -106,20 +142,26 @@ export const About = () => {
         </Container>
       </Section>
 
-      {/* 4 — Afiliaciones: membresías institucionales */}
-      <Section bg="white" spacing="md">
+      {/* 4 — Afiliaciones */}
+      <Section bg="white" spacing="sm">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <SectionTitle
-              title="Afiliaciones y membresías"
-              subtitle="Instituciones profesionales a las que pertenezco"
-            />
-            <div className="flex flex-wrap justify-center gap-3">
+            <motion.div {...fadeInUpView} className="mb-8">
+              <p className="font-sans text-xs text-neutral-600 uppercase tracking-widest">
+                Membresías institucionales
+              </p>
+            </motion.div>
+            <div className="space-y-3">
               {siteConfig.about.institutions.map((item, index) => (
-                <motion.div key={index} {...scaleInView(index * 0.1)}>
-                  <Badge variant="info" className="text-base px-6 py-3 font-medium">
+                <motion.div
+                  key={index}
+                  {...fadeInUpViewDelayed(index * 0.08)}
+                  className="flex items-center gap-4"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent/50 shrink-0" />
+                  <p className="font-sans text-neutral-600 text-sm leading-relaxed">
                     {item}
-                  </Badge>
+                  </p>
                 </motion.div>
               ))}
             </div>
@@ -127,30 +169,67 @@ export const About = () => {
         </Container>
       </Section>
 
-      {/* 5 — Enfoque terapéutico: cómo trabajo y mis valores */}
+      {/* 5 — Enfoque terapéutico */}
       <Section bg="muted" spacing="md">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <SectionTitle
-              align="left"
-              title="Mi enfoque terapéutico"
-              subtitle="Los principios que guían mi práctica clínica"
-            />
-            <Card hover={false}>
-              <p className="font-sans text-neutral-600 leading-relaxed text-lg">
-                {siteConfig.about.approach}
+            <motion.div {...fadeInUpView} className="mb-10">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-8 h-px bg-accent" />
+                <span className="font-sans text-xs text-accent uppercase tracking-[0.18em] font-medium">
+                  Enfoque
+                </span>
+              </div>
+              <h2 className="font-serif text-primary">
+                Mi forma de trabajar
+              </h2>
+            </motion.div>
+
+            <motion.div {...fadeInUpViewDelayed(0.15)} className="max-w-2xl">
+              {siteConfig.about.approach
+                .split("\n\n")
+                .filter(Boolean)
+                .map((paragraph, i) => (
+                  <p
+                    key={i}
+                    className={`font-sans leading-relaxed text-neutral-600 ${
+                      i > 0 ? "mt-5" : ""
+                    }`}
+                  >
+                    {paragraph.trim()}
+                  </p>
+                ))}
+            </motion.div>
+
+            {/* Nota primera sesión */}
+            <motion.div
+              {...fadeInUpViewDelayed(0.25)}
+              className="mt-12 pt-10 border-t border-neutral-200"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-8 h-px bg-accent" />
+                <span className="font-sans text-xs text-neutral-600 uppercase tracking-widest">
+                  La primera sesión
+                </span>
+              </div>
+              <p className="font-sans text-neutral-600 leading-relaxed max-w-xl">
+                {siteConfig.about.firstSession}
               </p>
-            </Card>
+            </motion.div>
           </div>
         </Container>
       </Section>
 
-      {/* 6 — CTA: invitación a contacto */}
+      {/* 6 — CTA */}
       <CTASection
-        title="¿Tienes preguntas?"
-        subtitle="Puedo responder tus dudas sobre mi práctica y ayudarte a evaluar si este espacio es el indicado para ti."
+        title="¿Querés saber si este es el espacio para vos?"
+        subtitle="Podemos charlar sin compromiso. La primera entrevista es un espacio para conocernos y evaluar si tiene sentido continuar."
         primaryAction={{ text: "Escribirme", href: "/contacto#form" }}
-        secondaryAction={{ text: "Consultar por WhatsApp", href: whatsAppUrl, external: true }}
+        secondaryAction={{
+          text: "Consultar por WhatsApp",
+          href: whatsAppUrl,
+          external: true,
+        }}
       />
     </>
   );

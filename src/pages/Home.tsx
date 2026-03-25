@@ -7,6 +7,7 @@ import {
   HowIWorkSection,
   ServicesGridSection,
   TrustSection,
+  FAQSection,
 } from "@/sections/home";
 
 export const Home = () => {
@@ -26,12 +27,13 @@ export const Home = () => {
       <HowIWorkSection />
       <ServicesGridSection />
       <TrustSection />
+      <FAQSection />
 
       <CTASection
-        title="¿Listo para comenzar?"
-        subtitle="La primera entrevista es un espacio de encuentro sin compromisos. Podemos conocernos y evaluar juntos si este es el lugar adecuado para tu proceso."
+        title="¿Es este el momento?"
+        subtitle="No hace falta tener todo claro antes de dar el primer paso. La primera entrevista es un espacio de encuentro sin compromisos, donde podemos conocernos y ver si tiene sentido continuar."
         primaryAction={{
-          text: "Solicitar entrevista",
+          text: "Solicitar primera entrevista",
           href: "/contacto#form",
         }}
         secondaryAction={{

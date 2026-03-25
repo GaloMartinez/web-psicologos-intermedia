@@ -9,36 +9,40 @@ export const Footer = () => {
     siteConfig.professional.whatsapp.number,
     siteConfig.professional.whatsapp.message
   );
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-neutral-100 text-neutral-600 py-12">
+    <footer className="bg-primary text-white/70">
       <Container>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        {/* Main content */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 py-16 border-b border-white/10">
+          {/* Columna 1: identidad */}
           <div>
-            <h3 className="font-serif text-primary font-medium text-lg mb-4">
+            <h3 className="font-serif text-white text-xl font-medium mb-2">
               {siteConfig.professional.name}
             </h3>
-            <p className="font-sans text-sm mb-2">
+            <p className="font-sans text-sm text-white/50 mb-5">
               {siteConfig.professional.license}
             </p>
-            <p className="font-sans text-sm mb-2">
-              {siteConfig.professional.city}
-            </p>
-            <p className="font-sans text-sm">
+            <p className="font-sans text-sm leading-relaxed mb-1">
               {siteConfig.professional.modality}
+            </p>
+            <p className="font-sans text-sm leading-relaxed">
+              {siteConfig.professional.city}
             </p>
           </div>
 
+          {/* Columna 2: navegación */}
           <div>
-            <h3 className="font-serif text-primary font-medium text-lg mb-4">
-              Enlaces
-            </h3>
-            <nav className="space-y-2">
+            <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/40 mb-5">
+              Navegación
+            </h4>
+            <nav className="space-y-3">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="font-sans block text-sm hover:text-primary transition-colors"
+                  className="font-sans block text-sm text-white/65 hover:text-white transition-colors duration-150"
                 >
                   {link.label}
                 </Link>
@@ -46,14 +50,15 @@ export const Footer = () => {
             </nav>
           </div>
 
+          {/* Columna 3: contacto */}
           <div>
-            <h3 className="font-serif text-primary font-medium text-lg mb-4">
+            <h4 className="font-sans text-[10px] uppercase tracking-widest text-white/40 mb-5">
               Contacto
-            </h3>
-            <div className="space-y-2 text-sm">
+            </h4>
+            <div className="space-y-3 text-sm">
               <a
                 href={`mailto:${siteConfig.professional.email}`}
-                className="font-sans block hover:text-primary transition-colors"
+                className="font-sans block text-white/65 hover:text-white transition-colors duration-150"
               >
                 {siteConfig.professional.email}
               </a>
@@ -61,37 +66,40 @@ export const Footer = () => {
                 href={whatsAppUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-sans block hover:text-primary transition-colors"
+                className="font-sans block text-white/65 hover:text-white transition-colors duration-150"
               >
                 WhatsApp
               </a>
+              <Link
+                to="/contacto#form"
+                className="font-sans block text-white/65 hover:text-white transition-colors duration-150"
+              >
+                Formulario de contacto
+              </Link>
             </div>
 
-            {siteConfig.socialLinks.length > 0 && (
-              <div className="mt-4 flex space-x-4">
-                {siteConfig.socialLinks.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-sans text-neutral-600 hover:text-primary transition-colors"
-                    aria-label={social.name}
-                  >
-                    {social.name}
-                  </a>
-                ))}
-              </div>
-            )}
+            {/* Agendar */}
+            <div className="mt-8">
+              <Link
+                to="/agenda"
+                className="inline-flex items-center gap-2 font-sans text-sm font-medium text-accent hover:text-white transition-colors duration-150"
+              >
+                Agendar sesión
+                <span>→</span>
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-neutral-200 pt-8 text-sm text-center space-y-2">
-          <p className="font-sans text-neutral-600">{siteConfig.disclaimer.text}</p>
-          <p className="font-sans text-neutral-600">{siteConfig.disclaimer.licenseInfo}</p>
-          <p className="font-sans text-neutral-600 mt-4">
-            © {new Date().getFullYear()} {siteConfig.professional.name}. Todos
-            los derechos reservados.
+        {/* Legal */}
+        <div className="py-8 space-y-2 text-xs text-white/35">
+          <p className="font-sans leading-relaxed max-w-2xl">
+            {siteConfig.disclaimer.text}
+          </p>
+          <p className="font-sans">{siteConfig.disclaimer.licenseInfo}</p>
+          <p className="font-sans pt-2">
+            © {year} {siteConfig.professional.name}. Todos los derechos
+            reservados.
           </p>
         </div>
       </Container>

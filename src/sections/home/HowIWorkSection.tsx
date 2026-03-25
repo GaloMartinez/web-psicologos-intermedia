@@ -1,63 +1,86 @@
 import { motion } from "framer-motion";
-import { fadeInUpViewDelayed } from "@/lib/animations";
+import { fadeInUpView, fadeInUpViewDelayed } from "@/lib/animations";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
-import { SectionTitle } from "@/components/ui/SectionTitle";
 import { siteConfig } from "@/config/siteConfig";
 
-type HowIWorkItem = (typeof siteConfig.howIWork)[number] & {
-  image?: string;
-  imageAlt?: string;
-};
-
 export const HowIWorkSection = () => {
-  const items = siteConfig.howIWork as HowIWorkItem[];
-  const defaultImage =
-    siteConfig.about.image || siteConfig.hero.backgroundImage || "";
-
   return (
-    <Section bg="muted" spacing="lg">
+    <Section bg="white" spacing="lg">
       <Container>
-        <SectionTitle
-          title="Cómo trabajo"
-          subtitle="Mi enfoque terapéutico, adaptado a cada persona"
-        />
-        <div className="space-y-6 md:space-y-7 max-w-5xl mx-auto">
-          {items.map((item, index) => {
-            const imageSrc = item.image || defaultImage;
-            const imageAlt = item.imageAlt || item.title;
+        <div className="max-w-4xl mx-auto">
+          {/* Header editorial */}
+          <motion.div {...fadeInUpView} className="mb-14">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 h-px bg-accent" />
+              <span className="font-sans text-xs text-accent uppercase tracking-[0.18em] font-medium">
+                El proceso
+              </span>
+            </div>
+            <h2 className="font-serif text-primary max-w-sm">
+              Cómo trabajo
+            </h2>
+          </motion.div>
 
-            return (
+          {/* Lista numerada editorial */}
+          <div>
+            {siteConfig.howIWork.map((item, index) => (
               <motion.div
                 key={index}
-                {...fadeInUpViewDelayed(index * 0.1)}
-                className={`bg-white rounded-2xl border border-neutral-200 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col md:flex-row ${
-                  index % 2 === 1 ? "md:flex-row-reverse" : ""
-                }`}
+                {...fadeInUpViewDelayed(index * 0.12)}
+                className="group border-t border-neutral-200 py-10 first:border-t-0 first:pt-0 grid grid-cols-[64px_1fr] gap-6 md:gap-10 items-start"
               >
-                {imageSrc && (
-                  <div className="relative w-full md:w-2/5 h-56 md:h-auto md:min-h-60 shrink-0">
-                    <img
-                      src={imageSrc}
-                      alt={imageAlt}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                )}
-                <div className="flex-1 p-8 md:p-10 flex items-center">
-                  <div>
-                    <h3 className="font-serif text-xl md:text-2xl font-semibold text-primary mb-3 leading-snug">
-                      {item.title}
-                    </h3>
-                    <p className="font-sans text-neutral-600 leading-relaxed text-base">
-                      {item.description}
-                    </p>
-                  </div>
+                {/* Número — visible, parte del diseño, no ruido decorativo */}
+                <div className="flex flex-col items-start pt-1">
+                  <span
+                    className="font-serif leading-none select-none"
+                    style={{
+                      fontSize: "3rem",
+                      color: "var(--color-accent)",
+                      opacity: 0.48,
+                      fontWeight: 400,
+                    }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+
+                {/* Contenido */}
+                <div>
+                  <h3 className="font-serif text-primary mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="font-sans text-neutral-600 leading-relaxed text-base max-w-xl">
+                    {item.description}
+                  </p>
                 </div>
               </motion.div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/* Nota de cierre — datos concretos, no quote genérica */}
+          <motion.div
+            {...fadeInUpViewDelayed(0.4)}
+            className="mt-4 pt-10 border-t border-neutral-200 flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-12"
+          >
+            {[
+              { value: "50 min", label: "por sesión" },
+              { value: "Semanal", label: "frecuencia habitual" },
+              { value: "1ª entrevista", label: "sin compromiso" },
+            ].map(({ value, label }) => (
+              <div key={label}>
+                <p
+                  className="font-serif text-primary font-medium leading-none mb-1"
+                  style={{ fontSize: "1.35rem" }}
+                >
+                  {value}
+                </p>
+                <p className="font-sans text-xs text-neutral-500 uppercase tracking-widest">
+                  {label}
+                </p>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </Container>
     </Section>

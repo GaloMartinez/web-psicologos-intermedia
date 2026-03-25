@@ -15,11 +15,14 @@ export const Header = () => {
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-30">
         <Container>
           <div className="flex items-center justify-between h-16 md:h-20">
-            <Link
-              to="/"
-              className="font-sans text-xl md:text-2xl font-semibold tracking-tight text-primary hover:text-primary/75 transition-colors duration-150"
-            >
-              {siteConfig.professional.name}
+            {/* Nombre en serif — marca personal, no producto SaaS */}
+            <Link to="/" className="group flex flex-col leading-none">
+              <span className="font-serif text-[1.35rem] md:text-[1.6rem] font-medium text-primary group-hover:text-secondary transition-colors duration-200 leading-none tracking-[-0.01em]">
+                {siteConfig.professional.name}
+              </span>
+              <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-neutral-500 mt-0.5 leading-none">
+                Psicólogo clínico · CABA
+              </span>
             </Link>
 
             <Navbar />

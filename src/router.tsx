@@ -16,6 +16,12 @@ const Contact = lazy(() =>
 const Schedule = lazy(() =>
   import("@/pages/Schedule").then((m) => ({ default: m.Schedule }))
 );
+const FAQ = lazy(() =>
+  import("@/pages/FAQ").then((m) => ({ default: m.FAQ }))
+);
+const Methodology = lazy(() =>
+  import("@/pages/Methodology").then((m) => ({ default: m.Methodology }))
+);
 const NotFound = lazy(() =>
   import("@/pages/NotFound").then((m) => ({ default: m.NotFound }))
 );
@@ -27,6 +33,8 @@ export const AppRouter = () => {
         <Route path="/" element={<Home />} />
         <Route path="/sobre-mi" element={<About />} />
         <Route path="/servicios" element={<Services />} />
+        <Route path="/metodologia" element={<Methodology />} />
+        <Route path="/preguntas-frecuentes" element={<FAQ />} />
         <Route path="/contacto" element={<Contact />} />
         <Route path="/agenda" element={<Schedule />} />
         <Route path="*" element={<NotFound />} />
